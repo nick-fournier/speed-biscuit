@@ -5,8 +5,9 @@
 #include "esp_log.h"
 #include <time.h>
 
-void parseGNRMC(const uint8_t* data, GNRMCPacket* packet) {
+void parseGNRMC(const uint8_t* data, GNRMCPacket* packet, bool verbose) {
     const char* gnrmc = strstr((const char*)data, "$GNRMC");
+    long last_epoch_time = packet->epoch_time;
 
     if (gnrmc == NULL) {
         return;
@@ -61,7 +62,9 @@ void parseGNRMC(const uint8_t* data, GNRMCPacket* packet) {
     formatTime(packet->time, packet->time);
     formatDate(packet->date, packet->date);
 
-    if (packet->epoch_time % 2 == 0) {
+    int tdelta = packet->epoch_time - last_epoch_time;
+
+    if (tdelta > 0 && packet->epoch_time % 5 == 0 && verbose) {
         char output[256];
         formatGNRMC(packet, output);
         ESP_LOGI("GPS", "%s", output);

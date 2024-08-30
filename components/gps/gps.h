@@ -21,7 +21,7 @@ typedef struct {
 } GNRMCPacket;
 
 // Function prototypes
-void parseGNRMC(const uint8_t* data, GNRMCPacket* packet);
+void parseGNRMC(const uint8_t* data, GNRMCPacket* packet, bool verbose);
 void formatGNRMC(const GNRMCPacket* packet, char* output);
 void formatTime(const char* input, char* output);
 void formatDate(const char* input, char* output);
